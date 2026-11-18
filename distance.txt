@@ -1,0 +1,52 @@
+
+
+INF = 9999
+NIL = -1
+# Read graph from grp3.txt
+with open("./grp3.txt", "r") as f:
+    lines = f.read().splitlines()
+
+N = int(lines[0].strip())
+edges = []
+
+for line in lines[1:]:
+    if line.strip():
+        parts = line.split()
+        u = int(parts[0])
+        v = int(parts[1])
+        w = float(parts[2])
+        edges.append((u, v, w))
+
+# Read source vertex
+s = int(input("Enter source vertex:\n"))
+
+# Initialize distance (d) and predecessor (p) arrays
+d = [INF] * N
+p = [NIL] * N
+d[s] = 0
+
+# Bellman-Ford (Distance Vector) algorithm
+for _ in range(N - 1):
+    for u, v, w in edges:
+        if d[v] > d[u] + w:
+            d[v] = d[u] + w
+            p[v] = u
+
+# Function to find path
+def get_path(s, v):
+    if s == v:
+        return str(s)
+    elif p[v] == -1:
+        return "No path exists"
+    else:
+        return get_path(s, p[v]) + "->" + str(v)
+
+# Print routing table output
+print("Output: \n")
+print("Vertex(v)\tDist(d).\t\tPath")
+print("---------------------------------------------------")
+
+for v in range(N):
+    print(f"{v}\t\t{d[v]}\t\t{get_path(s, v)}")
+
+print("---------------------------------------------------")
